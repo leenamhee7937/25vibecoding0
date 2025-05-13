@@ -1,85 +1,89 @@
 import streamlit as st
 
-# 🎨 페이지 설정
-st.set_page_config(page_title="MBTI 진로 추천", page_icon="🌈", layout="centered")
-
-# 🎉 사이드바 메뉴 (외부 의존 없이)
-menu_items = ["MBTI로 직업 찾기", "앱 소개", "문의하기"]
-selected = st.sidebar.radio("✨ 탐색 메뉴", menu_items)
-
-# 📝 MBTI 유형 설명
-mbti_descriptions = {
-    "INTJ": "조용하고 분석적인 전략가 타입으로, 복잡한 문제를 해결하고 미래를 계획하는 데 강점이 있습니다.",
-    "INTP": "호기심 많고 논리적인 사색가 타입으로, 아이디어를 탐구하며 이론적 문제 해결을 즐깁니다.",
-    "ENTJ": "자신감 있고 목표 지향적인 지휘관 타입으로, 조직을 이끌며 리더십을 발휘합니다.",
-    "ENTP": "창의적이고 활발한 발명가 타입으로, 새로운 아이디어와 가능성을 탐구합니다.",
-    "INFJ": "통찰력 있고 이상주의적인 옹호자 타입으로, 타인을 돕고 세상을 더 나은 곳으로 만드는 데 의미를 둡니다.",
-    "INFP": "이상주의적이고 감성적인 중재자 타입으로, 가치와 의미를 중요시하며 창의성에 강점이 있습니다.",
-    "ENFJ": "사교적이고 공감 능력이 뛰어난 프로타고니스트 타입으로, 타인의 성장을 돕고 조화를 이룹니다.",
-    "ENFP": "열정적이고 호기심 많은 활동가 타입으로, 새로운 경험과 가능성을 탐색하며 영감을 줍니다.",
-    "ISTJ": "신중하고 책임감이 강한 논리주의자 타입으로, 질서와 안정성을 중시하며 실용적인 업무에 강합니다.",
-    "ISFJ": "온화하고 성실한 수호자 타입으로, 타인을 돌보고 지원하는 데 강점을 가집니다.",
-    "ESTJ": "결단력 있고 조직적인 경영자 타입으로, 효율적인 관리와 계획에 능숙합니다.",
-    "ESFJ": "친절하고 협력적인 외교관 타입으로, 사람들을 지원하고 조화를 이루는 데 능합니다.",
-    "ISTP": "분석적이고 침착한 장인 타입으로, 문제 해결과 실용적 손재주에 뛰어납니다.",
-    "ISFP": "감성적이고 예술적인 모험가 타입으로, 감각적 경험과 창의적 표현에 강점이 있습니다.",
-    "ESTP": "활동적이고 모험심이 강한 집행자 타입으로, 즉흥적 상황에서 빠르게 대응합니다.",
-    "ESFP": "사교적이고 낙천적인 연예인 타입으로, 무대 위에서 빛나며 즐거움을 선사합니다."
+# MBTI 타입별 간단 설명 딕셔너리
+MBTI_DESCRIPTIONS = {
+    "ISTJ": "현실적이고 책임감 있는 관리자 유형",
+    "ISFJ": "온정적이고 세심한 수호자 유형",
+    "INFJ": "통찰력 있고 이상주의적인 옹호자 유형",
+    "INTJ": "전략적이고 독립적인 건축가 유형",
+    "ISTP": "논리적이고 융통성 있는 장인 유형",
+    "ISFP": "자유로운 영혼의 예술가 유형",
+    "INFP": "이상과 가치를 중시하는 중재자 유형",
+    "INTP": "분석적이고 혁신적인 사색가 유형",
+    "ESTP": "활동적이고 현실적인 촉진자 유형",
+    "ESFP": "친근하고 생기 넘치는 연예인 유형",
+    "ENFP": "창의적이고 열정적인 활동가 유형",
+    "ENTP": "영리하고 논쟁을 즐기는 발명가 유형",
+    "ESTJ": "조직적이고 실용적인 집행자 유형",
+    "ESFJ": "사교적이고 배려 깊은 제공자 유형",
+    "ENFJ": "카리스마 있고 따뜻한 지도자 유형",
+    "ENTJ": "결단력 있고 목표 지향적인 지휘관 유형",
 }
 
-# 🧠 MBTI별 직업 추천 데이터
-mbti_jobs = {
-    "INTJ": ["🔬 과학자", "📊 전략 컨설턴트", "💻 데이터 과학자"],
-    "INTP": ["🧪 연구원", "🎮 게임 디자이너", "📚 이론 물리학자"],
-    "ENTJ": ["💼 CEO", "📈 경영 컨설턴트", "🏛 정책 분석가"],
-    "ENTP": ["📢 마케팅 전문가", "💡 창업가", "🧠 발명가"],
-    "INFJ": ["🧑‍🏫 교사", "💬 심리상담사", "🎨 예술가"],
-    "INFP": ["📖 작가", "🎼 작곡가", "🌿 환경 운동가"],
-    "ENFJ": ["🎤 연설가", "👥 HR 전문가", "🎭 연극 연출가"],
-    "ENFP": ["🎙 방송인", "✈ 여행 작가", "🎨 크리에이터"],
-    "ISTJ": ["⚖ 판사", "📊 회계사", "🧑‍💻 시스템 관리자"],
-    "ISFJ": ["🧑‍⚕ 간호사", "🏫 초등교사", "📦 물류 관리자"],
-    "ESTJ": ["🏗 프로젝트 매니저", "📋 관리자", "💰 금융 분석가"],
-    "ESFJ": ["👩‍🏫 상담교사", "🏥 병원 행정가", "🛍 판매 관리자"],
-    "ISTP": ["🛠 기술자", "🏍 레이서", "🔧 정비사"],
-    "ISFP": ["🎨 그래픽 디자이너", "📷 사진작가", "🌸 플로리스트"],
-    "ESTP": ["🚓 경찰", "💼 세일즈 매니저", "🎤 MC"],
-    "ESFP": ["🎬 배우", "🕺 댄서", "🎤 가수"]
+# 타입 별 궁합 정보
+COMPATIBILITY = {
+    ("INTJ", "ENFP"): {
+        "강점": "창의적 아이디어와 전략적 계획력의 시너지",
+        "갈등": "감정 표현 방식 차이로 인한 오해",
+        "소통 팁": "서로의 의도와 기대를 명확히 말로 전달하세요."
+    },
+    ("INFJ", "ESTP"): {
+        "강점": "이상주의 vs 현실적 실행력의 균형",
+        "갈등": "의사결정 속도 차이로 인한 답답함",
+        "소통 팁": "중요 사항은 사전 조율 후 실행하세요."
+    },
+    # 기본 케이스: 모든 조합에 대해 비슷한 구조로 제공
 }
 
-# ✨ 메인 화면 로직
-if selected == "MBTI로 직업 찾기":
-    st.markdown(
-        "<h1 style='text-align: center; color: #e67e22;'>🌈 MBTI로 알아보는 나의 진로 ✨</h1>",
-        unsafe_allow_html=True
-    )
-    st.markdown("#### 당신의 MBTI는 무엇인가요? 😍 아래에서 선택해 주세요!")
-    mbti_type = st.selectbox("🧬 MBTI 유형 선택", options=list(mbti_descriptions.keys()))
+# 사용자 정의 함수: 조합 키 생성 및 정보 반환
 
-    if mbti_type:
-        st.markdown(f"#### 🔍 {mbti_type} 유형 설명")
-        st.info(mbti_descriptions[mbti_type])
-        st.markdown(f"#### 💖 {mbti_type} 유형에게 어울리는 직업은?")
-        st.success("✨ " + " | ".join(mbti_jobs[mbti_type]))
-        st.markdown("---")
-        st.markdown("💡 직업은 MBTI 성격 유형의 일반적인 특성과 연관 지어 추천됩니다. 자신에게 맞는 길을 탐색해보세요! 🚀")
+def get_compatibility(t1, t2):
+    if (t1, t2) in COMPATIBILITY:
+        return COMPATIBILITY[(t1, t2)]
+    if (t2, t1) in COMPATIBILITY:
+        return COMPATIBILITY[(t2, t1)]
+    return {
+        "강점": "서로의 차이를 배우며 성장할 수 있는 기회",
+        "갈등": "서로의 선호와 속도를 이해하는 과정이 필요",
+        "소통 팁": "서로의 스타일에 대해 긍정적 피드백을 자주 나누세요."
+    }
 
-elif selected == "앱 소개":
-    st.title("앱 소개 🌟")
-    st.markdown("""
-    이 웹앱은 MBTI 성격 유형을 기반으로 적절한 직업을 추천하는 **진로 탐색 도우미**입니다.  
-    🌻 학생, 취업 준비생, 직무 탐색 중인 모든 분들을 위한 앱이에요!
+# Streamlit 앱 구성
+st.set_page_config(page_title="MBTI 궁합 & 소통 팁", page_icon="💬", layout="wide")
+st.title("💬 MBTI 궁합 & 소통 팁 매칭")
 
-    - 🧠 MBTI 이론 기반 직업 추천
-    - 🎯 맞춤형 커리어 아이디어 제시
-    - 🌐 교육 현장에서의 활용 가능
+# 사이드바에서 두 가지 MBTI 타입 선택
+st.sidebar.header("MBTI 유형 선택")
+type1 = st.sidebar.selectbox("첫 번째 유형", list(MBTI_DESCRIPTIONS.keys()), index=0)
+type2 = st.sidebar.selectbox("두 번째 유형", list(MBTI_DESCRIPTIONS.keys()), index=1)
 
-    👉 **"MBTI로 직업 찾기"** 메뉴에서 시작해보세요!
-    """
-    )
+# 선택된 유형 설명
+st.subheader(f"{type1} vs {type2} 궁합 분석")
+info = get_compatibility(type1, type2)
 
-elif selected == "문의하기":
-    st.title("📮 문의하기")
-    st.markdown("앱에 대한 피드백이나 개선 제안이 있다면 아래 메일로 보내주세요 ✉")
-    st.info("📧 contact@yourdomain.com")
-    st.text("💻 제작자: @당신의이름")
+# 세 가지 주요 정보 표시
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.markdown("### 🌟 강점")
+    st.write(info["강점"])
+with col2:
+    st.markdown("### ⚠️ 갈등 포인트")
+    st.write(info["갈등"])
+with col3:
+    st.markdown("### 💡 소통 팁")
+    st.write(info["소통 팁"])
+
+# 추가 섹션: 개별 타입 설명
+st.markdown("---")
+st.header("개별 유형 기본 설명")
+col4, col5 = st.columns(2)
+with col4:
+    st.markdown(f"**{type1}**")
+    st.write(MBTI_DESCRIPTIONS[type1])
+with col5:
+    st.markdown(f"**{type2}**")
+    st.write(MBTI_DESCRIPTIONS[type2])
+
+# 하단 푸터
+st.markdown("---")
+st.caption("이 앱은 Streamlit으로 제작되었으며, MBTI 기반의 궁합 및 소통 팁을 제공합니다.")
