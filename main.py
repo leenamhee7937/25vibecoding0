@@ -156,21 +156,27 @@ mbti_texts = {
 
 # ---------- 버튼 누르면 결과 카드 출력 ----------
 if st.button("🎁 결과 보기"):
-    # 이미지 경로 설정
+    # 1. 이미지 경로 설정
     image_path = f"images/{mbti}.jpg"
 
-    # 이미지 출력
-    st.image(image_path, width=300, caption=f"{mbti} 닮은 수학자")
+    # 2. 이미지 파일 존재 여부 확인
+    import os
+    if not os.path.exists(image_path):
+        st.error(f"이미지 파일이 존재하지 않아요: {image_path}")
+    else:
+        # 3. 이미지 출력
+        st.image(image_path, width=300, caption=f"{mbti} 닮은 수학자")
 
-    # 텍스트 변환 (\n → <br>)
-    converted_text = mbti_texts[mbti].replace('\n', '<br>')
+        # 4. 텍스트 변환
+        converted_text = mbti_texts[mbti].replace('\n', '<br>')
 
-    # 카드 형식 HTML 출력
-    html = """
-        <div class='card'>
-            <div class='mbti-title'>{title}</div>
-            <div class='mbti-text'>{text}</div>
-        </div>
-    """.format(title=mbti + " 유형 분석", text=converted_text)
+        # 5. 카드 HTML 출력
+        html = """
+            <div class='card'>
+                <div class='mbti-title'>{title}</div>
+                <div class='mbti-text'>{text}</div>
+            </div>
+        """.format(title=mbti + " 유형 분석", text=converted_text)
 
-    st.markdown(html, unsafe_allow_html=True)
+        st.markdown(html, unsafe_allow_html=True)
+
