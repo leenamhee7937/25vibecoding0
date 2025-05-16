@@ -156,27 +156,16 @@ mbti_texts = {
 
 # ---------- 버튼 누르면 결과 카드 출력 ----------
 if st.button("🎁 결과 보기"):
-    # 줄바꿈을 HTML 태그로 변경
-    converted_text = mbti_texts[mbti].replace('\n', '<br>')
-    # 1. 이미지 경로 설정
+    # 이미지 경로 설정
     image_path = f"images/{mbti}.jpg"
 
-    # 2. 이미지 출력
+    # 이미지 출력
     st.image(image_path, width=300, caption=f"{mbti} 닮은 수학자")
 
-    # 3. 텍스트 변환
+    # 텍스트 변환 (\n → <br>)
     converted_text = mbti_texts[mbti].replace('\n', '<br>')
 
-    # 4. HTML 카드 출력
-    html = """
-        <div class='card'>
-            <div class='mbti-title'>{title}</div>
-            <div class='mbti-text'>{text}</div>
-        </div>
-    """.format(title=mbti + " 유형 분석", text=converted_text)
-
-    st.markdown(html, unsafe_allow_html=True)
-    # 카드 형식으로 출력
+    # 카드 형식 HTML 출력
     html = """
         <div class='card'>
             <div class='mbti-title'>{title}</div>
