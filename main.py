@@ -1,12 +1,13 @@
 import streamlit as st
 
-# ---------- 스타일 설정 ----------
+# ---------- 페이지 설정 ----------
 st.set_page_config(
     page_title="나와 닮은 수학자는?",
     page_icon="🧠",
     layout="centered",
 )
 
+# ---------- 스타일 정의 ----------
 st.markdown("""
     <style>
     .title {
@@ -42,11 +43,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ---------- 제목 ----------
+# ---------- 제목 출력 ----------
 st.markdown("<div class='title'>🧠 나와 닮은 수학자는 누구일까?</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>MBTI를 선택하면 당신과 닮은 수학자를 알려드릴게요!</div>", unsafe_allow_html=True)
 
-# ---------- 사용자 선택 ----------
+# ---------- MBTI 선택 ----------
 mbti = st.selectbox("👇 MBTI를 선택하세요", [
     "INTJ", "INTP", "ENTP", "ENTJ",
     "INFJ", "INFP", "ENFP", "ENFJ",
@@ -54,7 +55,7 @@ mbti = st.selectbox("👇 MBTI를 선택하세요", [
     "ISTP", "ISFP", "ESTP", "ESFP"
 ])
 
-# ---------- 텍스트 데이터 ----------
+# ---------- MBTI별 설명  ----------
 mbti_texts = {
     "INTJ": """**INTJ – 전략적인 혁신가**  
 당신은 INTJ, 치밀한 전략가입니다.  
@@ -145,7 +146,7 @@ mbti_texts = {
 당신과 닮은 수학자는 **조제프 푸리에**! 열전도 방정식을 풀다가 ‘푸리에 급수’라는 혁신을 만들어낸 인물이죠.  
 실용적이고 현장감 넘치는 수학자였던 그는, ESTP의 본능을 완벽하게 대변합니다.  
 즉각적인 통찰이 당신의 수학적 재능을 이끌 거예요!""",
-    
+
     "ESFP": """**ESFP – 열정적인 발명가**  
 당신은 ESFP, 생기 넘치고 직관적으로 세상을 느끼는 사람입니다.  
 당신과 닮은 수학자는 **아르키메데스**! 욕조 속에서 “유레카!”를 외친 것으로 유명한 고대의 천재죠.  
@@ -153,13 +154,17 @@ mbti_texts = {
 즐겁고 신나는 수학, 당신의 손끝에서 시작될 거예요!"""
 }
 
-# ---------- 결과 출력 ----------
+# ---------- 버튼 누르면 결과 카드 출력 ----------
 if st.button("🎁 결과 보기"):
-    st.markdown(f"""
+    # 줄바꿈을 HTML 태그로 변경
+    converted_text = mbti_texts[mbti].replace('\n', '<br>')
+
+    # 카드 형식으로 출력
+    html = """
         <div class='card'>
-            <div class='mbti-title'>{mbti} 유형 분석</div>
-            <div class='mbti-text'>
-                {mbti_texts[mbti].replace('\n', '<br>')}
-            </div>
+            <div class='mbti-title'>{title}</div>
+            <div class='mbti-text'>{text}</div>
         </div>
-    """, unsafe_allow_html=True)
+    """.format(title=mbti + " 유형 분석", text=converted_text)
+
+    st.markdown(html, unsafe_allow_html=True)
