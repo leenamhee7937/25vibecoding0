@@ -156,6 +156,15 @@ mbti_texts = {
 
 # ---------- 버튼 누르면 결과 카드 출력 ----------
 if st.button("🎁 결과 보기"):
+    import os
+
+image_path = f"images/{mbti}.jpg"
+st.write("📁 이미지 경로:", image_path)
+st.write("📂 현재 디렉토리:", os.getcwd())
+
+if not os.path.exists(image_path):
+    st.error(f"❌ 이미지 파일이 존재하지 않아요: {image_path}")
+
     # 1. 이미지 경로 설정
     image_path = f"images/{mbti}.jpg"
 
