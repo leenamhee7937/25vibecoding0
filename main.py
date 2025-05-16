@@ -158,20 +158,16 @@ mbti_texts = {
 if st.button("🎁 결과 보기"):
     import os
 
-image_path = f"images/{mbti}.jpg"
-st.write("📁 이미지 경로:", image_path)
-st.write("📂 현재 디렉토리:", os.getcwd())
-
-if not os.path.exists(image_path):
-    st.error(f"❌ 이미지 파일이 존재하지 않아요: {image_path}")
-
     # 1. 이미지 경로 설정
     image_path = f"images/{mbti}.jpg"
 
+    # 디버깅용 로그
+    st.write("📁 이미지 경로:", image_path)
+    st.write("📂 현재 디렉토리:", os.getcwd())
+
     # 2. 이미지 파일 존재 여부 확인
-    import os
     if not os.path.exists(image_path):
-        st.error(f"이미지 파일이 존재하지 않아요: {image_path}")
+        st.error(f"❌ 이미지 파일이 존재하지 않아요: {image_path}")
     else:
         # 3. 이미지 출력
         st.image(image_path, width=300, caption=f"{mbti} 닮은 수학자")
@@ -188,4 +184,3 @@ if not os.path.exists(image_path):
         """.format(title=mbti + " 유형 분석", text=converted_text)
 
         st.markdown(html, unsafe_allow_html=True)
-
