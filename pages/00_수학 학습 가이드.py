@@ -3,12 +3,6 @@ import streamlit as st
 # ------------------ 페이지 설정 ------------------
 st.set_page_config(page_title="MBTI 수학 학습 전략", page_icon="📘")
 
-# ------------------ 사이드바 메뉴 ------------------
-st.sidebar.title("📚 메뉴")
-st.sidebar.markdown("- [메인 화면](https://mathgeek.streamlit.app)")
-st.sidebar.markdown("- **MBTI 수학 전략 가이드** ← 현재 페이지")
-st.sidebar.markdown("- [MBTI 수학자 매칭](https://mathgeek.streamlit.app/수학자_추천)")
-
 # ------------------ 데이터 정의 ------------------
 mbti_info = {
     "INTJ": {
